@@ -142,3 +142,5 @@ We are not ready to serve our application through SSR.
 ## Overview
 
 If we design a schema with what's happening that's how it would look something like this:
+
+![SSR with Vue and Express](https://github.com/ferreiratiago/images-upload/blob/master/ssr/ssr-with-vue-and-express.png)
