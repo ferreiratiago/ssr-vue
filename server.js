@@ -8,7 +8,12 @@ const path = require('path');
 global.Vue = require('vue');
 
 // Get HTML layout
-let layout = fs.readFileSync('./index.html', 'utf8');
+const layout = fs.readFileSync('./index.html', 'utf8');
+
+// Split layout into two sections of HTML
+const layoutSections = layout.split('<div id="app"></div>');
+const preAppHTML = layoutSections[0];
+const postAppHTML = layoutSections[1];
 
 // Create the server renderer
 const rendered = require('vue-server-renderer').createRenderer();
@@ -25,22 +30,33 @@ server.use('/src', express.static(
 // Handle all GET requests
 server.get('*', function (request, response) {
     // On GET request
-    // Render our Vue application to string
-    rendered.renderToString(
-        // Create a Vue instance
-        require('./src/app')(),
-        // Handle rendered result
-        function (error, html) {
-            // If an error on rendering
-            if(error) {
-                console.log(error);
-                // Tell the client that something went wrong
-                return response.status(500).send('Server Error');
-            }
-            // Send the layout with the rendered HTML to the client
-            response.send(layout.replace('<div id="app"></div>', html));
-        }
-    )
+    // Render our Vue app to a stream
+    const stream = rendered.renderToStream(require('./src/app')());
+
+    // Write our pre-app HTML to the response
+    response.write(preAppHTML);
+
+    stream.on('data', function (chunk) {
+        // Write data to the response
+        // as it becomes available
+        response.write(chunk);
+    });
+
+    // When all chuncks are rendered
+    stream.on('end', function (chunk) {
+        // Write our post-app HTML to the response
+        response.end(postAppHTML);
+    });
+
+    // If an error occurs
+    stream.on('error', function (error) {
+        // Log it into the console
+        console.log('error');
+        // Tell the client that something went wrong
+        return response
+            .status(500)
+            .send('Server Error');
+    });
 });
 
 // Listen on port 5000

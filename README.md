@@ -144,3 +144,51 @@ We are not ready to serve our application through SSR.
 If we design a schema with what's happening that's how it would look something like this:
 
 ![SSR with Vue and Express](https://github.com/ferreiratiago/images-upload/blob/master/ssr/ssr-with-vue-and-express.png)
+
+
+## With Stream
+
+We will now try the server with a stream to the client, which is a better option for servers that allow stream.
+
+By using stream we are able to send the response as it's generated, rather than all at once.
+
+As a result the requests are served faster.
+
+The trick here is in our `server.get` function:
+
+```js
+// Handle all GET requests
+server.get('*', function (request, response) {
+    // On GET request
+    // Render our Vue app to a stream
+    const stream = rendered.renderToStream(require('./src/app')());
+
+    // Write our pre-app HTML to the response
+    response.write(preAppHTML);
+
+    stream.on('data', function (chunk) {
+        // Write data to the response
+        // as it becomes available
+        response.write(chunk);
+    });
+
+    // When all chuncks are rendered
+    stream.on('end', function (chunk) {
+        // Write our post-app HTML to the response
+        response.end(postAppHTML);
+    });
+
+    // If an error occurs
+    stream.on('error', function (error) {
+        // Log it into the console
+        console.log('error');
+        // Tell the client that something went wrong
+        return response
+            .status(500)
+            .send('Server Error');
+    });
+});
+```
+
+## Thanks to :beers:
+[Vue](https://vuejs.org/v2/guide/ssr.html) and it's amazing documentation.
