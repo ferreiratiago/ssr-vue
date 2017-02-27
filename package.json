@@ -1,0 +1,21 @@
+{
+  "name": "ssr-vue",
+  "version": "1.0.0",
+  "scripts": {
+    "cp": "shx cp node_modules/vue/dist/vue.js src/vue.js",
+    "run-server": "nodemon --watch . --ext js,html server.js",
+    "server": "npm-run-all cp run-server"
+  },
+  "author": "Tiago Ferreira",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "vue": "^2.2.1",
+    "vue-server-renderer": "^2.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.2",
+    "npm-run-all": "^3.0.0",
+    "shx": "^0.1.4"
+  }
+}

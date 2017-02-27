@@ -1,0 +1,19 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vue SSR</title>
+        <script src="src/vue.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <!-- Element where Vue will run -->
+        <div id="app"></div>
+        <script src="src/app.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            // Mount app (defined on browser window on src/app.js)
+            // on the element with 'app' id.
+            app.$mount('#app');
+        </script>
+    </body>
+</html>
