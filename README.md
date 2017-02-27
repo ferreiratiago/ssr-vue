@@ -190,5 +190,7 @@ server.get('*', function (request, response) {
 });
 ```
 
+To debug and better understand the flow of the stream, please explore the `node --inspect` with [Chrome DevTools](https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-7c4a1b95ae27#.ropvmzyz2).
+
 ## Thanks to :beers:
 [Vue](https://vuejs.org/v2/guide/ssr.html) and it's amazing documentation.
